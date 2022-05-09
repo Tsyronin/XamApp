@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamApp.Views.StatisticsPage"
+             Title="{Binding Title}"
+             xmlns:local="clr-namespace:XamApp.ViewModels"  
+             xmlns:model="clr-namespace:XamApp.Models" 
+             xmlns:microcharts="clr-namespace:Microcharts.Forms;assembly=Microcharts.Forms"
+             x:Name="BrowseItemsPage">
+    <RefreshView x:DataType="local:StatisticsViewModel" Command="{Binding LoadStatisticsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+        <ScrollView>
+            <StackLayout Padding="0, 100, 0, 0">
+                <microcharts:ChartView x:Name="chartViewPie" HeightRequest="400" Chart="{Binding Chart}"/>
+            </StackLayout>
+
+        </ScrollView>
+    </RefreshView>
+</ContentPage>

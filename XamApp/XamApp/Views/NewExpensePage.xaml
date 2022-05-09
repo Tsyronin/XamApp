@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamApp.Views.NewExpensePage"
+             Shell.PresentationMode="ModalAnimated"
+             Title="New Expense"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core" 
+             xmlns:viewmodels="clr-namespace:XamApp.ViewModels" 
+             x:DataType="viewmodels:NewExpenseViewModel"
+             ios:Page.UseSafeArea="true">
+    <ContentPage.Content>
+        <StackLayout Spacing="10" Padding="15, 0, 15, 30" VerticalOptions="Center">
+            <Label Text="Amount:" FontSize="Medium"/>
+            <Entry Text="{Binding Amount, Mode=TwoWay}" FontSize="Medium" Keyboard="Numeric"/>
+
+            <Label Text="Category:" FontSize="Medium"/>
+            <Picker SelectedItem="{Binding SelectedCategoryName}">
+                <Picker.Items>
+                    <x:String>Purchases</x:String>
+                    <x:String>Charity</x:String>
+                    <x:String>Food</x:String>
+                    <x:String>Rent</x:String>
+                </Picker.Items>
+            </Picker>
+
+            <Label Text="Date:" FontSize="Medium"/>
+            <DatePicker Date="{Binding ExpenseDate}" Format="dd/MM/yyyy" />
+
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Cancel" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand"></Button>
+                <Button Text="Save" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand"></Button>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+    
+</ContentPage>

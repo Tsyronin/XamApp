@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="XamApp.Views.CategoriesPage"
+             Title="{Binding Title}"
+             xmlns:local="clr-namespace:XamApp.ViewModels"  
+             xmlns:model="clr-namespace:XamApp.Models"  
+             x:Name="CategoriesPageView">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Add category" Command="{Binding AddCategoryCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <RefreshView x:DataType="local:CategoriesViewModel" Command="{Binding LoadCategoriesCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+        <CollectionView x:Name="ItemsListView"
+                ItemsSource="{Binding Categories}"
+                SelectionMode="None"
+                Margin="10, 10, 10, 10">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout ItemSpacing="10" Orientation="Vertical"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:Category">
+                    <Frame BackgroundColor="LightBlue" CornerRadius="10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Text="{Binding Name}"  
+                                    Grid.Row="0" Grid.Column="0"
+                                    LineBreakMode="NoWrap" 
+                                    TextColor="Black"
+                                    Style="{DynamicResource ListItemTextStyle}" 
+                                    FontSize="20"/>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                        NumberOfTapsRequired="1"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type local:CategoriesViewModel}}, Path=CategoryTapped}"		
+                                        CommandParameter="{Binding .}">
+                                </TapGestureRecognizer>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </RefreshView>
+</ContentPage>

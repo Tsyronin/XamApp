@@ -14,7 +14,8 @@ namespace XamApp
             InitializeComponent();
 
             DependencyService.Register<MockDataStore>();
-            DependencyService.Register<DummyExpenseService>();
+            DependencyService.Register<ExpenseService>();
+
             MainPage = new AppShell();
         }
 

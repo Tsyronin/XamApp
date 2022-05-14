@@ -1,63 +1,46 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
+using XamApp.Models;
+using Xamarin.Forms;
 
 namespace XamApp.Services
 {
-    public class DummyExpenseService
+    public class ExpenseService
     {
-        private List<Expense> Expenses = new List<Expense>();
+        HttpClient client;
 
-        public DummyExpenseService()
+        string baseUri = "https://192.168.5.106:44304/api/";
+
+        string token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ1c2VyMUBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjljODRlNjkxLTMzM2QtNDQ4Yy04MTdhLWY4ZTZlNWQ5YzNlOSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJuYmYiOjE2NTIzODAzMDQsImV4cCI6MTY1MjM4NTcwNCwiaXNzIjoiV2ViQXBwbGljYXRpb253V2ViQVBJX0pXVF9kZW1vU2VydmVyIiwiYXVkIjoiV2ViQXBwbGljYXRpb253V2ViQVBJX0pXVF9kZW1vQ2xpZW50In0.N7jXotHM9fBEOlncXCkD1Y2dV3-R-TaNo9RG0T2jE4o";
+
+        public ExpenseService()
         {
-            Expenses.Add(new Expense()
+            client = new HttpClient(new HttpClientHandler()
             {
-                Id = 0,
-                UserBankAccountId = 2,
-                CategoryId = 0,
-                CategoryName = null,
-                ExpenseIdentInBank = "ZMEp_ZKqngpMvGu5",
-                Time = DateTime.Parse("2022-05-06T15:40:49"),
-                Description = "Богодар / Bogodar",
-                Amount = -158.96,
-                Balance = 127315
-            });
-
-            Expenses.Add(new Expense()
-            {
-                Id = 0,
-                UserBankAccountId = 2,
-                CategoryId = 0,
-                CategoryName = null,
-                ExpenseIdentInBank = "1B9xRhCeW2ifPpgR",
-                Time = DateTime.Parse("2022-05-03T12:42:57"),
-                Description = "Нова пошта",
-                Amount = -34753,
-                Balance = 143211
-            });
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
+                {
+                    //bypass
+                    return true;
+                },
+            }
+            , false);
         }
 
-        public IEnumerable<Expense> GetNotCheckedExpenses()
+        public async Task<IEnumerable<Expense>> GetNotCheckedExpensesAsync()
         {
-            return Expenses;
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await client.GetAsync(baseUri + "Expense/notchecked");
+
+            string responseString = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<List<Expense>>(responseString);
+            return result;
         }
 
-        public void AddExpense(Expense expense)
-        {
-            Expenses.Add(expense);
-        }
-    }
-
-    public class Expense
-    {
-        public int Id { get; set; }
-        public int UserBankAccountId { get; set; }
-        public int CategoryId { get; set; }
-        public string CategoryName { get; set; }
-        public string ExpenseIdentInBank { get; set; }
-        public DateTime Time { get; set; }
-        public string Description { get; set; }
-        public double Amount { get; set; }
-        public int Balance { get; set; }
     }
 }

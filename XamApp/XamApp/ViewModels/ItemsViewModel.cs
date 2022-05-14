@@ -11,37 +11,37 @@ namespace XamApp.ViewModels
 {
     public class ItemsViewModel : BaseViewModel
     {
-        public DummyExpenseService _expenseService => DependencyService.Get<DummyExpenseService>();
+        public ExpenseService _expenseService => DependencyService.Get<ExpenseService>();
 
-        private Item _selectedItem;
+        private Expense _selectedExpense;
 
-        public ObservableCollection<Item> Items { get; }
-        public Command LoadItemsCommand { get; }
-        public Command AddItemCommand { get; }
-        public Command<Item> ItemTapped { get; }
+        public ObservableCollection<Expense> Expenses { get; }
+        public Command LoadExpensesCommand { get; }
+        public Command AddExpenseCommand { get; }
+        public Command<Expense> ExpenseTapped { get; }
 
         public ItemsViewModel()
         {
             Title = "Browse";
-            Items = new ObservableCollection<Item>();
-            LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
+            Expenses = new ObservableCollection<Expense>();
+            LoadExpensesCommand = new Command(async () => await ExecuteLoadExpensesCommand());
 
-            ItemTapped = new Command<Item>(OnItemSelected);
+            ExpenseTapped = new Command<Expense>(OnExpenseSelected);
 
-            AddItemCommand = new Command(OnAddItem);
+            AddExpenseCommand = new Command(OnAddExpense);
         }
 
-        async Task ExecuteLoadItemsCommand()
+        async Task ExecuteLoadExpensesCommand()
         {
             IsBusy = true;
 
             try
             {
-                Items.Clear();
-                var items = await DataStore.GetItemsAsync(true);
-                foreach (var item in items)
+                Expenses.Clear();
+                var expenses = await _expenseService.GetNotCheckedExpensesAsync();
+                foreach (var expense in expenses)
                 {
-                    Items.Add(item);
+                    Expenses.Add(expense);
                 }
             }
             catch (Exception ex)
@@ -57,31 +57,31 @@ namespace XamApp.ViewModels
         public void OnAppearing()
         {
             IsBusy = true;
-            SelectedItem = null;
+            SelectedExpense = null;
         }
 
-        public Item SelectedItem
+        public Expense SelectedExpense
         {
-            get => _selectedItem;
+            get => _selectedExpense;
             set
             {
-                SetProperty(ref _selectedItem, value);
-                OnItemSelected(value);
+                SetProperty(ref _selectedExpense, value);
+                OnExpenseSelected(value);
             }
         }
 
-        private async void OnAddItem(object obj)
+        private async void OnAddExpense(object obj)
         {
             await Shell.Current.GoToAsync(nameof(NewItemPage));
         }
 
-        async void OnItemSelected(Item item)
+        async void OnExpenseSelected(Expense expense)
         {
-            if (item == null)
+            if (expense == null)
                 return;
 
             // This will push the ItemDetailPage onto the navigation stack
-            await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
+            await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={expense.Id}");
         }
     }
 }

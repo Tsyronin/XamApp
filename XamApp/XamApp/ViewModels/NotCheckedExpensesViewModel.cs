@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
+using XamApp.Helpers.SharedModels;
 using XamApp.Models;
 using XamApp.Services;
 using XamApp.Views;
@@ -9,7 +12,7 @@ using Xamarin.Forms;
 
 namespace XamApp.ViewModels
 {
-    public class ItemsViewModel : BaseViewModel
+    public class NotCheckedExpensesViewModel : BaseViewModel
     {
         public ExpenseService _expenseService => DependencyService.Get<ExpenseService>();
 
@@ -20,9 +23,11 @@ namespace XamApp.ViewModels
         public Command AddExpenseCommand { get; }
         public Command<Expense> ExpenseTapped { get; }
 
-        public ItemsViewModel()
+        private IEnumerable<Category> Categories;
+
+        public NotCheckedExpensesViewModel()
         {
-            Title = "Browse";
+            Title = "Last Bank Expenses";
             Expenses = new ObservableCollection<Expense>();
             LoadExpensesCommand = new Command(async () => await ExecuteLoadExpensesCommand());
 
@@ -39,6 +44,8 @@ namespace XamApp.ViewModels
             {
                 Expenses.Clear();
                 var expenses = await _expenseService.GetNotCheckedExpensesAsync();
+                Categories = await _expenseService.GetCategoriesAsync();
+
                 foreach (var expense in expenses)
                 {
                     Expenses.Add(expense);
@@ -80,8 +87,18 @@ namespace XamApp.ViewModels
             if (expense == null)
                 return;
 
+            SharedExpense.SelectedExpense = expense;
+
             // This will push the ItemDetailPage onto the navigation stack
-            await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={expense.Id}");
+            //PopupNavigation.Instance.PushAsync(new CategorizeExpensePopUpView());
+            var response = await Application.Current.MainPage.DisplayActionSheet("ActionSheet: Category:", "Cancel", null, Categories.Select(c => c.Name).ToArray());
+            Category selectedCategory = Categories.Single(c => c.Name == response);
+            expense.CategoryId = selectedCategory.Id;
+            expense.CategoryName = selectedCategory.Name;
+
+            _expenseService.AddExpenseAsync(expense);
+            Expenses.Remove(expense);
+            //await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ExpenseId)}={expense.Id}");
         }
     }
 }

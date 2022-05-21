@@ -4,23 +4,20 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XamApp.Models;
 using XamApp.ViewModels;
-using XamApp.Views;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace XamApp.Views
 {
     public partial class ItemsPage : ContentPage
     {
-        ItemsViewModel _viewModel;
+        NotCheckedExpensesViewModel _viewModel;
 
         public ItemsPage()
         {
             InitializeComponent();
 
-            BindingContext = _viewModel = new ItemsViewModel();
+            BindingContext = _viewModel = new NotCheckedExpensesViewModel();
         }
 
         protected override void OnAppearing()

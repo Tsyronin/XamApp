@@ -1,23 +1,26 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using XamApp.Helpers.SharedModels;
 using XamApp.Models;
 using Xamarin.Forms;
 
 namespace XamApp.ViewModels
 {
-    [QueryProperty(nameof(ItemId), nameof(ItemId))]
+    [QueryProperty(nameof(ExpenseId), nameof(ExpenseId))]
     public class ItemDetailViewModel : BaseViewModel
     {
-        private string itemId;
-        private string text;
+        private string expenseId;
+        private double amount;
         private string description;
         public string Id { get; set; }
 
-        public string Text
+        private Expense expense;
+
+        public double Amount
         {
-            get => text;
-            set => SetProperty(ref text, value);
+            get => amount;
+            set => SetProperty(ref amount, value);
         }
 
         public string Description
@@ -26,27 +29,28 @@ namespace XamApp.ViewModels
             set => SetProperty(ref description, value);
         }
 
-        public string ItemId
+        public string ExpenseId
         {
             get
             {
-                return itemId;
+                return expenseId;
             }
             set
             {
-                itemId = value;
-                LoadItemId(value);
+                expenseId = value;
+                LoadExpenseId(value);
             }
         }
 
-        public async void LoadItemId(string itemId)
+        public void LoadExpenseId(string expenseId)
         {
             try
             {
-                var item = await DataStore.GetItemAsync(itemId);
-                Id = item.Id;
-                Text = item.Text;
-                Description = item.Description;
+                //var item = await DataStore.GetItemAsync(itemId);
+                expense = SharedExpense.SelectedExpense;
+                Id = expense.Id.ToString();
+                Amount = expense.Amount;
+                Description = expense.Description;
             }
             catch (Exception)
             {

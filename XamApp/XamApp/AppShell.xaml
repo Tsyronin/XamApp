@@ -81,8 +81,14 @@
     <FlyoutItem Title="About" Icon="icon_about.png">
         <ShellContent Route="AboutPage" ContentTemplate="{DataTemplate local:AboutPage}" />
     </FlyoutItem>
-    <FlyoutItem Title="Browse" Icon="icon_feed.png">
+    <FlyoutItem Title="Last bank expenses" Icon="icon_feed.png">
         <ShellContent Route="ItemsPage" ContentTemplate="{DataTemplate local:ItemsPage}" />
+    </FlyoutItem>
+    <FlyoutItem Title="Expense history" Icon="icon_feed.png">
+        <ShellContent Route="ExpenseHistoryPage" ContentTemplate="{DataTemplate local:ExpenseHistoryPage}" />
+    </FlyoutItem>
+    <FlyoutItem Title="Expense Statistics" Icon="icon_about.png">
+        <ShellContent Route="StatisticsPage" ContentTemplate="{DataTemplate local:StatisticsPage}" />
     </FlyoutItem>
 
     <!-- When the Flyout is visible this will be a menu item you can tie a click behavior to  -->

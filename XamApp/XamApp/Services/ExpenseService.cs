@@ -1,0 +1,125 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
+using XamApp.Models;
+using Xamarin.Forms;
+
+namespace XamApp.Services
+{
+    public class ExpenseService
+    {
+        HttpClient client;
+
+        string baseUri = "https://192.168.5.107:44304/api/";
+
+        string token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ1c2VyMUBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjljODRlNjkxLTMzM2QtNDQ4Yy04MTdhLWY4ZTZlNWQ5YzNlOSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJuYmYiOjE2NTMxNTg0NzYsImV4cCI6MTY1MzE2Mzg3NiwiaXNzIjoiV2ViQXBwbGljYXRpb253V2ViQVBJX0pXVF9kZW1vU2VydmVyIiwiYXVkIjoiV2ViQXBwbGljYXRpb253V2ViQVBJX0pXVF9kZW1vQ2xpZW50In0.KuB5cNKZh872rr_knnQD3FjfVPrsOaNUX9k5iGGoqOs";
+
+        public ExpenseService()
+        {
+            client = new HttpClient(new HttpClientHandler()
+            {
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) =>
+                {
+                    //bypass
+                    return true;
+                },
+            }
+            , false);
+        }
+
+        public async Task<IEnumerable<Expense>> GetNotCheckedExpensesAsync()
+        {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            try
+            {
+                var response = await client.GetAsync(baseUri + "Expense/notchecked");
+                string responseString = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<List<Expense>>(responseString);
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Category>> GetCategoriesAsync()
+        {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            try
+            {
+                var response = await client.GetAsync(baseUri + "Category");
+                string responseString = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<List<Category>>(responseString);
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public async void AddExpenseAsync(Expense expense)
+        {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var jsonString = JsonConvert.SerializeObject(expense);
+
+            var content = new StringContent(jsonString, UnicodeEncoding.UTF8, "application/json");
+            try
+            {
+                var response = await client.PostAsync(baseUri + "Expense", content);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Expense>> GetExpenseHistoryAsync()
+        {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            try
+            {
+                var response = await client.GetAsync(baseUri + "Expense/history");
+                string responseString = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<List<Expense>>(responseString);
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Statistic>> GetExpenseStatisticsAsync()
+        {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            try
+            {
+                var response = await client.GetAsync(baseUri + "Expense/statistics");
+                string responseString = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<List<Statistic>>(responseString);
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+    }
+}

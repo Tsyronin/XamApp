@@ -1,4 +1,5 @@
 ﻿using System;
+using XamApp.Helpers;
 using XamApp.Services;
 using XamApp.Views;
 using Xamarin.Forms;
@@ -16,7 +17,25 @@ namespace XamApp
             DependencyService.Register<MockDataStore>();
             DependencyService.Register<ExpenseService>();
 
-            MainPage = new AppShell();
+            SetMainPage();
+            //MainPage = new AppShell();
+        }
+
+        private void SetMainPage()
+        {
+            if (!String.IsNullOrEmpty(Settings.AccessToken))
+            {
+                MainPage = new AppShell();
+            }
+            else if (!String.IsNullOrEmpty(Settings.Email)
+                && !String.IsNullOrEmpty(Settings.Password))
+            {
+                MainPage = new NavigationPage(new LoginPage());
+            }
+            else
+            {
+                MainPage = new NavigationPage(new RegisterPage());
+            }
         }
 
         protected override void OnStart()

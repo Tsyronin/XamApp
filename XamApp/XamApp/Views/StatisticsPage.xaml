@@ -9,7 +9,10 @@
              x:Name="BrowseItemsPage">
     <RefreshView x:DataType="local:StatisticsViewModel" Command="{Binding LoadStatisticsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
         <ScrollView>
-            <microcharts:ChartView x:Name="chartViewPie" HeightRequest="100" Chart="{Binding Chart}"/>
+            <StackLayout Padding="0, 100, 0, 0">
+                <microcharts:ChartView x:Name="chartViewPie" HeightRequest="400" Chart="{Binding Chart}"/>
+            </StackLayout>
+
         </ScrollView>
     </RefreshView>
 </ContentPage>

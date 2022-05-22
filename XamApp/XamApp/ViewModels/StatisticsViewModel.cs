@@ -37,7 +37,7 @@ namespace XamApp.ViewModels
             {
                 Statistics = await _expenseService.GetExpenseStatisticsAsync();
                 Entries = GetStatisticChartEntries();
-                Chart = new PieChart() { Entries = Entries, LabelTextSize = 50, LabelMode = LabelMode.RightOnly };
+                Chart = new PieChart() { Entries = Entries, LabelTextSize = 50, LabelMode = LabelMode.RightOnly, AnimationDuration = TimeSpan.FromSeconds(0.7) };
                 OnPropertyChanged(nameof(Chart));
             }
             catch (Exception ex)

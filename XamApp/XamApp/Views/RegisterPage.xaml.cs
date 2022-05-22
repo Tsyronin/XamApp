@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XamApp.Helpers;
 using XamApp.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -11,18 +10,13 @@ using Xamarin.Forms.Xaml;
 namespace XamApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LoginPage : ContentPage
+    public partial class RegisterPage : ContentPage
     {
-        public LoginPage()
+        public RegisterPage()
         {
             InitializeComponent();
-            this.BindingContext = new LoginViewModel();
-        }
+            this.BindingContext = new RegisterViewModel();
 
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-            Settings.AccessToken = "";
         }
     }
 }

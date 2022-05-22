@@ -91,12 +91,14 @@ namespace XamApp.ViewModels
 
             // This will push the ItemDetailPage onto the navigation stack
             //PopupNavigation.Instance.PushAsync(new CategorizeExpensePopUpView());
-            var response = await Application.Current.MainPage.DisplayActionSheet("ActionSheet: Category:", "Cancel", null, Categories.Select(c => c.Name).ToArray());
+            var response = await Application.Current.MainPage.DisplayActionSheet("Category:", "Cancel", null, Categories.Select(c => c.Name).ToArray());
+            if (response != "Cancel")
+                return;
             Category selectedCategory = Categories.Single(c => c.Name == response);
             expense.CategoryId = selectedCategory.Id;
             expense.CategoryName = selectedCategory.Name;
 
-            _expenseService.AddExpenseAsync(expense);
+            await _expenseService.AddExpenseAsync(expense);
             Expenses.Remove(expense);
             //await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ExpenseId)}={expense.Id}");
         }

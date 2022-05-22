@@ -8,7 +8,7 @@
              x:Name="BrowseItemsPage">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Add" Command="{Binding AddExpenseCommand}" />
+        <ToolbarItem Text="➕" Command="{Binding AddExpenseCommand}" />
     </ContentPage.ToolbarItems>
     <!--
       x:DataType enables compiled bindings for better performance and compile time validation of binding expressions.
@@ -23,7 +23,7 @@
                 <LinearItemsLayout ItemSpacing="10" Orientation="Vertical"/>
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="model:Expense">
                     <Frame BackgroundColor="LightBlue" CornerRadius="10">
                         <Grid>
                             <Grid.RowDefinitions>

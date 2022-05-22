@@ -20,7 +20,7 @@
                 <LinearItemsLayout ItemSpacing="10" Orientation="Vertical"/>
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="model:Expense">
                     <Frame BackgroundColor="LightBlue" CornerRadius="10">
                         <Grid>
                             <Grid.RowDefinitions>

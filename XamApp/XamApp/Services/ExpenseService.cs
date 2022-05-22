@@ -1,10 +1,13 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using XamApp.Helpers;
 using XamApp.Models;
 using Xamarin.Forms;
 
@@ -14,9 +17,17 @@ namespace XamApp.Services
     {
         HttpClient client;
 
-        string baseUri = "https://192.168.5.107:44304/api/";
+        string baseUri = "https://192.168.5.107:44304/";
 
-        string token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ1c2VyMUBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjljODRlNjkxLTMzM2QtNDQ4Yy04MTdhLWY4ZTZlNWQ5YzNlOSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJuYmYiOjE2NTMxNTg0NzYsImV4cCI6MTY1MzE2Mzg3NiwiaXNzIjoiV2ViQXBwbGljYXRpb253V2ViQVBJX0pXVF9kZW1vU2VydmVyIiwiYXVkIjoiV2ViQXBwbGljYXRpb253V2ViQVBJX0pXVF9kZW1vQ2xpZW50In0.KuB5cNKZh872rr_knnQD3FjfVPrsOaNUX9k5iGGoqOs";
+        //string Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ1c2VyMUBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjljODRlNjkxLTMzM2QtNDQ4Yy04MTdhLWY4ZTZlNWQ5YzNlOSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJuYmYiOjE2NTMxNTg0NzYsImV4cCI6MTY1MzE2Mzg3NiwiaXNzIjoiV2ViQXBwbGljYXRpb253V2ViQVBJX0pXVF9kZW1vU2VydmVyIiwiYXVkIjoiV2ViQXBwbGljYXRpb253V2ViQVBJX0pXVF9kZW1vQ2xpZW50In0.KuB5cNKZh872rr_knnQD3FjfVPrsOaNUX9k5iGGoqOs";
+
+        public string Token
+        {
+            get
+            {
+                return Settings.AccessToken;
+            }
+        }
 
         public ExpenseService()
         {
@@ -33,11 +44,11 @@ namespace XamApp.Services
 
         public async Task<IEnumerable<Expense>> GetNotCheckedExpensesAsync()
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
 
             try
             {
-                var response = await client.GetAsync(baseUri + "Expense/notchecked");
+                var response = await client.GetAsync(baseUri + "api/Expense/notchecked");
                 string responseString = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<List<Expense>>(responseString);
                 return result;
@@ -52,11 +63,11 @@ namespace XamApp.Services
 
         public async Task<IEnumerable<Category>> GetCategoriesAsync()
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
 
             try
             {
-                var response = await client.GetAsync(baseUri + "Category");
+                var response = await client.GetAsync(baseUri + "api/Category");
                 string responseString = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<List<Category>>(responseString);
                 return result;
@@ -69,15 +80,15 @@ namespace XamApp.Services
             }
         }
 
-        public async void AddExpenseAsync(Expense expense)
+        public async Task AddExpenseAsync(Expense expense)
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
             var jsonString = JsonConvert.SerializeObject(expense);
 
             var content = new StringContent(jsonString, UnicodeEncoding.UTF8, "application/json");
             try
             {
-                var response = await client.PostAsync(baseUri + "Expense", content);
+                var response = await client.PostAsync(baseUri + "api/Expense", content);
             }
             catch (Exception ex)
             {
@@ -87,11 +98,11 @@ namespace XamApp.Services
 
         public async Task<IEnumerable<Expense>> GetExpenseHistoryAsync()
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
 
             try
             {
-                var response = await client.GetAsync(baseUri + "Expense/history");
+                var response = await client.GetAsync(baseUri + "api/Expense/history");
                 string responseString = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<List<Expense>>(responseString);
                 return result;
@@ -106,11 +117,11 @@ namespace XamApp.Services
 
         public async Task<IEnumerable<Statistic>> GetExpenseStatisticsAsync()
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
 
             try
             {
-                var response = await client.GetAsync(baseUri + "Expense/statistics");
+                var response = await client.GetAsync(baseUri + "api/Expense/statistics");
                 string responseString = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<List<Statistic>>(responseString);
                 return result;
@@ -118,6 +129,60 @@ namespace XamApp.Services
             catch (Exception ex)
             {
 
+                throw;
+            }
+        }
+
+        public async Task<string> LoginAsync(AuthModel authModel)
+        {
+            var jsonString = JsonConvert.SerializeObject(authModel);
+            var requestContent = new StringContent(jsonString, UnicodeEncoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await client.PostAsync(baseUri + "token", requestContent);
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+
+                    JObject jwt = JsonConvert.DeserializeObject<JObject>(responseContent);
+
+                    var accessToken = jwt.Value<string>("access_token");
+
+                    return accessToken;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> RegisterAsync(AuthModel authModel)
+        {
+            var jsonString = JsonConvert.SerializeObject(authModel);
+            var requestContent = new StringContent(jsonString, UnicodeEncoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await client.PostAsync(baseUri + "register", requestContent);
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
                 throw;
             }
         }

@@ -10,15 +10,14 @@ using Xamarin.Forms.Xaml;
 namespace XamApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MainMenuPage : TabbedPage
+    public partial class AddExpensePage : ContentPage
     {
-        MainMenuViewModel _viewModel;
+        AddExpenseViewModel _viewModel;
 
-        public MainMenuPage()
+        public AddExpensePage()
         {
             InitializeComponent();
-
-            BindingContext = _viewModel = new MainMenuViewModel();
+            BindingContext = _viewModel = new AddExpenseViewModel();
         }
     }
 }

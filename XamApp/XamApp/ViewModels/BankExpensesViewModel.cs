@@ -12,7 +12,7 @@ using Xamarin.Forms;
 
 namespace XamApp.ViewModels
 {
-    public class NotCheckedExpensesViewModel : BaseViewModel
+    public class BankExpensesViewModel : BaseViewModel
     {
         public ExpenseService _expenseService => DependencyService.Get<ExpenseService>();
 
@@ -25,7 +25,7 @@ namespace XamApp.ViewModels
 
         private IEnumerable<Category> Categories;
 
-        public NotCheckedExpensesViewModel()
+        public BankExpensesViewModel()
         {
             Title = "Last Bank Expenses";
             Expenses = new ObservableCollection<Expense>();
@@ -79,7 +79,7 @@ namespace XamApp.ViewModels
 
         private async void OnAddExpense(object obj)
         {
-            await Shell.Current.GoToAsync(nameof(NewItemPage));
+            await Shell.Current.GoToAsync(nameof(NewExpensePage));
         }
 
         async void OnExpenseSelected(Expense expense)
@@ -89,10 +89,8 @@ namespace XamApp.ViewModels
 
             SharedExpense.SelectedExpense = expense;
 
-            // This will push the ItemDetailPage onto the navigation stack
-            //PopupNavigation.Instance.PushAsync(new CategorizeExpensePopUpView());
             var response = await Application.Current.MainPage.DisplayActionSheet("Category:", "Cancel", null, Categories.Select(c => c.Name).ToArray());
-            if (response != "Cancel")
+            if (response == "Cancel" || String.IsNullOrEmpty(response))
                 return;
             Category selectedCategory = Categories.Single(c => c.Name == response);
             expense.CategoryId = selectedCategory.Id;

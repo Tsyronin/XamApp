@@ -19,8 +19,6 @@ namespace XamApp.Services
 
         string baseUri = "https://192.168.5.107:44304/";
 
-        //string Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ1c2VyMUBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjljODRlNjkxLTMzM2QtNDQ4Yy04MTdhLWY4ZTZlNWQ5YzNlOSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlVzZXIiLCJuYmYiOjE2NTMxNTg0NzYsImV4cCI6MTY1MzE2Mzg3NiwiaXNzIjoiV2ViQXBwbGljYXRpb253V2ViQVBJX0pXVF9kZW1vU2VydmVyIiwiYXVkIjoiV2ViQXBwbGljYXRpb253V2ViQVBJX0pXVF9kZW1vQ2xpZW50In0.KuB5cNKZh872rr_knnQD3FjfVPrsOaNUX9k5iGGoqOs";
-
         public string Token
         {
             get
@@ -180,6 +178,18 @@ namespace XamApp.Services
                 {
                     return false;
                 }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task DeleteExpense(int expenseId)
+        {
+            try
+            {
+                var response = await client.DeleteAsync(baseUri + "api/Expense/" + expenseId);
             }
             catch (Exception ex)
             {

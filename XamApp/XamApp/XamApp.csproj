@@ -18,9 +18,18 @@
     <Compile Update="Views\ExpenseHistoryPage.xaml.cs">
       <DependentUpon>ExpenseHistoryPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\BankExpensesPage.xaml.cs">
+      <DependentUpon>BankExpensesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\NewExpensePage.xaml.cs">
+      <DependentUpon>NewExpensePage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Views\AddExpensePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\ExpenseHistoryPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

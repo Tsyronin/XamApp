@@ -77,7 +77,7 @@ namespace XamApp.ViewModels
 
         private async void OnAddExpense(object obj)
         {
-            await Shell.Current.GoToAsync(nameof(NewItemPage));
+            await Shell.Current.GoToAsync(nameof(NewExpensePage));
         }
 
         async void OnExpenseSelected(Expense expense)
@@ -85,11 +85,22 @@ namespace XamApp.ViewModels
             if (expense == null)
                 return;
 
-            SharedExpense.SelectedExpense = expense;
+            var response = await Application.Current.MainPage.DisplayAlert("Delete expense?", "", "OK", "Cancel");
+
+            if (response == false)
+                return;
+
+            await _expenseService.DeleteExpense(expense.Id);
+
+            Expenses.Remove(expense);
+
+            //if (response == "Cancel" || String.IsNullOrEmpty(response))
+            //    return;
+
 
             // This will push the ItemDetailPage onto the navigation stack
 
-            await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ExpenseId)}={expense.Id}");
+            //await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ExpenseId)}={expense.Id}");
         }
     }
 }

@@ -17,7 +17,7 @@ namespace XamApp.Services
     {
         HttpClient client;
 
-        string baseUri = "https://192.168.5.107:44304/";
+        string baseUri = "https://192.168.5.102:44304/";
 
         public string Token
         {
@@ -87,6 +87,34 @@ namespace XamApp.Services
             try
             {
                 var response = await client.PostAsync(baseUri + "api/Expense", content);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        internal async Task AddCategoryAsync(Category category)
+        {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+            var jsonString = JsonConvert.SerializeObject(category);
+
+            var content = new StringContent(jsonString, UnicodeEncoding.UTF8, "application/json");
+            try
+            {
+                var response = await client.PostAsync(baseUri + "api/Category", content);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        internal async Task DeleteCategoryAsync(int categoryId)
+        {
+            try
+            {
+                var response = await client.DeleteAsync(baseUri + "api/Category/" + categoryId);
             }
             catch (Exception ex)
             {

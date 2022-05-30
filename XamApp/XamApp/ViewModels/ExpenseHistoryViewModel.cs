@@ -44,7 +44,7 @@ namespace XamApp.ViewModels
                 Expenses.Clear();
                 var expenses = await _expenseService.GetExpenseHistoryAsync();
 
-                foreach (var expense in expenses)
+                foreach (var expense in expenses.OrderByDescending(e => e.Time))
                 {
                     Expenses.Add(expense);
                 }

@@ -15,7 +15,7 @@ namespace XamApp
             Routing.RegisterRoute(nameof(NewExpensePage), typeof(NewExpensePage));
             Routing.RegisterRoute(nameof(AddExpensePage), typeof(AddExpensePage));
             Routing.RegisterRoute(nameof(RegisterPage), typeof(RegisterPage));
-            Routing.RegisterRoute(nameof(AboutPage), typeof(AboutPage));
+            Routing.RegisterRoute(nameof(CategoriesPage), typeof(CategoriesPage));
 
 
         }
